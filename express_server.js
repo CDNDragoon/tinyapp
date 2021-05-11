@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+const genRandomString = () => Math.random().toString(36).substring(3).slice(-5);
+
 app.set("view engine", "ejs");
 const PORT = 8080; // default port 8080
 
@@ -46,3 +48,4 @@ app.post("/urls", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
