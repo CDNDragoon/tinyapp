@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
-
 };
 
 app.get("/", (req, res) => {
@@ -45,6 +44,22 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(urlDatabase[req.params.shortURL]);
 });
 
+app.get("/login", (req, res) => {
+  res.send('ok')
+});
+
+app.get("/test", (req, res) => {
+  res.send('Test working')
+});
+
+app.post("/login", (req, res) => {
+  const email = req.body.email
+  const password = req.body.password
+  const username = req.body.username
+  res.cookie('username', username)
+  res.redirect('/urls')
+});
+
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
   // res.send("Ok");         // Respond with 'Ok' (we will replace this)
@@ -68,4 +83,3 @@ app.post("/urls/:shortURL", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
