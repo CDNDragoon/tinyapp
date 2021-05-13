@@ -65,6 +65,11 @@ app.post("/login", (req, res) => {
   res.redirect('/urls')
 });
 
+app.post("/logout", (req, res) => {
+  res.clearCookie('username')
+  res.redirect('/urls')
+});
+
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
   // res.send("Ok");         // Respond with 'Ok' (we will replace this)
