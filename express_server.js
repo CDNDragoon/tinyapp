@@ -6,6 +6,7 @@ const {
   genRandomString,
   getUserByEmail,
   existingEmail,
+  checkPassword,
 } = require("./helpers/helper");
 
 app.set("view engine", "ejs");
@@ -120,9 +121,23 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const username = req.body.username;
-  res.cookie("user_id", getUserByEmail(users, email));
-  res.redirect("/urls");
+  if(email && password) {
+    if(existingEmail(users, email)) {
+      if(checkPassword(users, email, password)) {
+        res.cookie("user_id", getUserByEmail(users, email));
+        res.redirect("/urls");
+      } else {
+        res.status(403);
+        res.send(`<html><body><h1>Error:403</h1> <h2><b>Please check your password!</h2><h3><a href="/login">Login</a></h3></b></body></html>\n`);
+      }
+    } else {
+      res.status(403);
+      res.send(`<html><body><h1>Error:403</h1> <h2><b>This email(${email}) is not registered!\n Please Register first!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n`);
+    }
+  } else {
+    res.status(403);
+    res.send(`<html><body><h1>Error:403</h1> <h2><b>Email and Password cannot be empty!!!</h2><h3><a href="/login">Login</a></h3></b></body></html>\n`);
+  }
 });
 
 app.post("/logout", (req, res) => {
