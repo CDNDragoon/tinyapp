@@ -2,7 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const app = express();
 
-const genRandomString = () => Math.random().toString(36).substring(3).slice(-5);
+const {genRandomString, getUserByEmail} = require("./helpers/helper");
 
 app.set("view engine", "ejs");
 const PORT = 8080; // default port 8080
@@ -15,6 +15,19 @@ app.use(cookieParser());
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
+};
+
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "helloworld"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
 };
 
 app.get("/", (req, res) => {
@@ -35,8 +48,8 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls", (req, res) => {
   console.log('req.cookies', req.cookies.username);
-
-  const templateVars = { urls: urlDatabase, username: req.cookies['username'] };
+  const user = users[req.cookies['user_id']]
+  const templateVars = { urls: urlDatabase, username: user };
   res.render('urls_index', templateVars)
 });
 
@@ -70,19 +83,25 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
    const email = req.body.email
    const password = req.body.password
+   let id = genRandomString();
+   let newUser = {id, email, password}
+   users[id] = newUser;
+   res.cookie('user_id', id)
+   res.redirect('/urls')
+   console.log(users);
 })
 
 app.post("/login", (req, res) => {
   const email = req.body.email
   const password = req.body.password
   const username = req.body.username
-  res.cookie('username', username)
+  res.cookie('user_id', getUserByEmail(users, email))
   res.redirect('/urls')
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('username')
-  res.redirect('/urls')
+  res.clearCookie('user_id');
+  res.redirect('/urls');
 });
 
 app.post("/urls", (req, res) => {
