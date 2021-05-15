@@ -69,10 +69,6 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(urlDatabase[req.params.shortURL]);
 });
 
-app.get("/login", (req, res) => {
-  res.send("ok");
-});
-
 app.get("/test", (req, res) => {
   res.send("Test working");
 });
@@ -111,6 +107,15 @@ app.post("/register", (req, res) => {
     );
   }
 });
+
+app.get("/login", (req, res) => {
+  const username = req.body.username;
+  const templateVars = { username };
+  if (!username) {
+    res.render("login", templateVars);
+  } else {
+    res.redirect("/urls");
+  }});
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
