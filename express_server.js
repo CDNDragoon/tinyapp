@@ -57,6 +57,21 @@ app.get("/test", (req, res) => {
   res.send('Test working')
 });
 
+app.get("/register", (req, res) => {
+  const username = req.body.username;
+  const templateVars = {username};
+  if (!username) {
+    res.render("register", templateVars)
+  } else {
+    res.redirect("/urls")
+  }
+}); 
+
+app.post("/register", (req, res) => {
+   const email = req.body.email
+   const password = req.body.password
+})
+
 app.post("/login", (req, res) => {
   const email = req.body.email
   const password = req.body.password
