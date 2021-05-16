@@ -7,6 +7,7 @@ const {
   getUserByEmail,
   existingEmail,
   checkPassword,
+  filterDatabase,
 } = require("./helpers/helper");
 
 app.set("view engine", "ejs");
@@ -25,7 +26,7 @@ app.use(cookieParser());
 const urlDatabase = {
   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" },
-  aliBas: { longURL: "http://www.youtube.com", userID: "aJ48lW"}
+  utd4rf: { longURL: "http://www.youtube.com", userID: "aJ48lW"}
 };
 
 const users = {
@@ -54,7 +55,8 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   console.log("req.cookies", req.cookies.username);
   const user = users[req.cookies["user_id"]];
-  const templateVars = { urls: urlDatabase, username: user };
+  let urlList = filterDatabase(urlDatabase, req.cookies["user_id"])
+  const templateVars = { urls: urlList, username: user };
   res.render("urls_index", templateVars);
 });
 
@@ -64,9 +66,10 @@ app.post("/urls", (req, res) => {
   // add new urls to database & make short url to match
   const shortURL = genRandomString();
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
+  urlDatabase[shortURL] = {longURL:longURL, userID:req.cookies["user_id"]};
   res.redirect(`/urls/${shortURL}`);
 });
+
 app.get("/urls/new", (req, res) => {
   const username = users[req.cookies["user_id"]];
   const templateVars = {username};
@@ -76,11 +79,13 @@ app.get("/urls/new", (req, res) => {
     res.redirect("/login");
   }
 });
+
 app.get("/urls/:shortURL", (req, res) => {
   const username = users[req.cookies["user_id"]];
+  let urlList = filterDatabase(urlDatabase, req.cookies["user_id"])
   const templateVars = {
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
+    longURL: urlList[req.params.shortURL],
     username
   };
   if (username) {
@@ -91,16 +96,20 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.longURL;
+  urlDatabase[req.params.shortURL].longURL = req.body.longURL;
   res.redirect(`/urls/${req.params.shortURL}`);
 });
+
 app.get("/u/:shortURL", (req, res) => {
-  res.redirect(urlDatabase[req.params.shortURL]);
+  res.redirect(urlDatabase[req.params.shortURL].longURL);
 });
 
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
+  const user = users[req.cookies["user_id"]];
+  if(user !== undefined){
+    delete urlDatabase[req.params.shortURL];
+  }
   res.redirect("/urls");
 });
 

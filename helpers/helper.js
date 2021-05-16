@@ -32,6 +32,8 @@ const checkPassword = function (obj, email, password) {
   return false;
 };
 
+
+
 const users = {
   userRandomID: {
     id: "userRandomID",
@@ -45,9 +47,28 @@ const users = {
   },
 };
 
+const database = {
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" },
+  utd4rf: { longURL: "http://www.youtube.com", userID: "aJ48lW"}
+};
+
+const filterDatabase = function(database, userID) {
+  let result = {};
+  if(userID !== undefined) {
+    for (let shortURL in database) {
+      if(database[shortURL].userID === userID){
+        result[shortURL] = database[shortURL].longURL;
+      }
+    }
+  }
+  return result;
+}
+
 module.exports = {
   genRandomString,
   getUserByEmail,
   existingEmail,
   checkPassword,
+  filterDatabase,
 };

@@ -13,7 +13,7 @@
       <div class="card-body">
         <h5 class="card-title">TinyURL for: <%= longURL %></h5>
         <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
-        <a href="#">create a new url</a>
+        <a href="/urls/new">create a new url</a>
       </div>
     <div class="card-footer text-muted">
       <form class="form-inline" action="/urls/<%= shortURL %>" method="POST">
