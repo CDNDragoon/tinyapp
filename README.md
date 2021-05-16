@@ -5,3 +5,14 @@
 !["Screenshot of error URLs page"](https://github.com/CDNDragoon/tinyapp/blob/main/screenshots/error.png)
 !["Screenshot of edit URLs page"](https://github.com/CDNDragoon/tinyapp/blob/main/screenshots/edit.png)
 !["Screenshot of register URLs page"](https://github.com/CDNDragoon/tinyapp/blob/main/screenshots/register.png)
+## Dependecies 
+- node.js
+- express.js
+- ejs
+- bcrypt
+- cookies.session
+## Instructions 
+- clone repository
+- `npm install`
+- run web server with `npm start` 
+- for testing `npm test`
