@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const genRandomString = function () {
   let result = Math.random().toString(36).substring(3).slice(-5);
   console.log(result);
@@ -25,7 +27,7 @@ const existingEmail = function (obj, email) {
 const checkPassword = function (obj, email, password) {
   const id = getUserByEmail(obj, email);
   for (let user in obj) {
-    if ((user = id && password === obj[user].password)) {
+    if (user = id && bcrypt.compareSync(password, obj[user].password)) {
       return true;
     }
   }
